@@ -1,0 +1,70 @@
+@baseUrl = http://localhost:3000/api/v1
+
+### ===========================
+### AUTH
+### ===========================
+
+### Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### Logout
+POST {{baseUrl}}/auth/logout
+
+### Get Current User
+GET {{baseUrl}}/auth/me
+
+### ===========================
+### CATEGORIES
+### ===========================
+
+### Get All Categories
+GET {{baseUrl}}/categories
+
+### ===========================
+### PRODUCTS
+### ===========================
+
+### Get Products (with pagination)
+GET {{baseUrl}}/products?page=2&limit=5
+
+### Get Products with Search
+GET {{baseUrl}}/products?search=smartwatch&page=1&limit=10
+
+### Create Product (Admin only)
+POST {{baseUrl}}/products
+Content-Type: application/json
+
+{
+  "name": "New Awesome Product",
+  "price": 149.99,
+  "categoryId": "REPLACE_WITH_CATEGORY_ID",
+  "description": "A fantastic new product for our catalog"
+}
+
+### Update Product (Admin only)
+PUT {{baseUrl}}/products/bd35a629-69b4-41d8-9984-e8bcbe38b670
+Content-Type: application/json
+
+{
+  "name": "Updated Product Name",
+  "price": 11111
+}
+
+### Delete Product (Admin only)
+DELETE {{baseUrl}}/products/bd35a629-69b4-41d8-9984-e8bcbe38b670
+
+### Bulk Price Update (Admin only)
+POST {{baseUrl}}/products/bulk-price-update
+Content-Type: application/json
+
+{
+  "productIds": ["0140e6fd-e705-468d-bcfe-99ab1b238bc6"],
+  "discountPercentage": 5
+}
