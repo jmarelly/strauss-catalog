@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@mui/material/styles';
@@ -10,6 +11,8 @@ import { Layout } from './components/layout/Layout';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Admin } from './pages/Admin';
+import { setGlobalToastError } from './services/apiErrorHandler';
+import { useToast } from './hooks/useToast';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,6 +23,16 @@ const queryClient = new QueryClient({
   },
 });
 
+function GlobalToastSetup() {
+  const toast = useToast();
+
+  React.useEffect(() => {
+    setGlobalToastError(toast.error);
+  }, [toast]);
+
+  return null;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -27,6 +40,7 @@ function App() {
         <CssBaseline />
         <GlobalStyles />
         <ToastProvider>
+          <GlobalToastSetup />
           <AuthProvider>
             <BrowserRouter>
               <Routes>

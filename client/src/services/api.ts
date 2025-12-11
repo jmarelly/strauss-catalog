@@ -11,11 +11,15 @@ import type {
   LoginCredentials,
   AuthResponse,
 } from '../types';
+export { setGlobalToastError };
+import { setupApiErrorHandling, setGlobalToastError } from './apiErrorHandler';
 
 const api = axios.create({
   baseURL: 'http://localhost:3000/api/v1',
   withCredentials: true,
 });
+
+setupApiErrorHandling(api);
 
 export const authApi = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {

@@ -20,8 +20,6 @@ export class ProductModel {
       query = query.where(condition) as typeof query;
     }
 
-    query = query.orderBy(products.name) as typeof query;
-
     if (limit) {
       query = query.limit(limit) as typeof query;
     }
@@ -30,7 +28,7 @@ export class ProductModel {
       query = query.offset(offset) as typeof query;
     }
 
-    return query.all();
+    return query.orderBy(asc(products.name)).all();
   }
 
   count(where?: WhereCondition): number {
