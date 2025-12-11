@@ -14,6 +14,7 @@ import { GradientTitle } from './Home.styles';
 
 export function Home() {
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(8);
   const [filters, setFilters] = useState<ProductsQuery>({});
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -28,12 +29,17 @@ export function Home() {
   );
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['products', page, normalizedFilters],
-    queryFn: () => productsApi.getAll({ ...filters, page, limit: 8 }),
+    queryKey: ['products', page, limit, normalizedFilters],
+    queryFn: () => productsApi.getAll({ ...filters, page, limit }),
   });
 
   const handleFilterChange = useCallback((newFilters: ProductsQuery) => {
     setFilters(newFilters);
+    setPage(1);
+  }, []);
+
+  const handleLimitChange = useCallback((newLimit: number) => {
+    setLimit(newLimit);
     setPage(1);
   }, []);
 
@@ -58,7 +64,9 @@ export function Home() {
 
       <ProductFilters
         onFilterChange={handleFilterChange}
+        onLimitChange={handleLimitChange}
         totalItems={data?.pagination.totalItems || 0}
+        currentLimit={limit}
       />
 
       {isLoading ? (

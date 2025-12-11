@@ -12,5 +12,7 @@ export type ProductGridProps = {
 
 export type ProductFiltersProps = {
   onFilterChange: (filters: import('../../types').ProductsQuery) => void;
+  onLimitChange: (limit: number) => void;
   totalItems: number;
+  currentLimit: number;
 };

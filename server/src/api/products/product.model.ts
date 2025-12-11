@@ -34,10 +34,8 @@ export class ProductModel {
   count(where?: WhereCondition): number {
     let query = db.select({ count: sql<number>`count(*)` }).from(products);
 
-    // Always apply deletedAt filter
     query = query.where(isNull(products.deletedAt)) as typeof query;
 
-    // Apply additional conditions if provided
     if (where) {
       query = query.where(where) as typeof query;
     }

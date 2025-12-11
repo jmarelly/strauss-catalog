@@ -1,143 +1,198 @@
-# Product Catalog Monorepo
+# Product Catalog
 
-A full-stack product catalog application with React frontend and Node.js/Express backend.
+A modern full-stack e-commerce product catalog application built with React and Node.js.
 
-## Project Structure
+## 1. Tech Stack
 
-```
-product-catalog-monorepo/
-├── client/                 # React frontend (Vite + TypeScript)
-├── server/                 # Express backend (Node.js + TypeScript + SQLite)
-├── collection.http         # HTTP requests for testing API
-└── package.json           # Monorepo root package.json
-```
+### Frontend
 
-## Getting Started
+- **React 18** with TypeScript
+- **Vite** for build tooling and development server
+- **Material-UI (MUI)** for component library
+- **TanStack React Query** for server state management
+- **React Router** for client-side routing
+- **Zod** for schema validation
+
+### Backend
+
+- **Node.js** with Express framework
+- **TypeScript** for type safety
+- **SQLite** with Drizzle ORM for database
+- **JWT** for authentication
+- **bcrypt** for password hashing
+- **Pino** for logging
+
+### Development Tools
+
+- **ESLint** for code linting
+- **Prettier** for code formatting
+- **Nodemon** for server hot reload
+
+## 2. How to Initialize and Run
 
 ### Prerequisites
 
 - Node.js 20+
 - npm or yarn
 
-### Installation
+### Quick Start
 
-1. Clone the repository:
 ```bash
+# Clone repository
 git clone <your-repo-url>
-cd product-catalog-monorepo
-```
+cd product-catalog
 
-2. Install dependencies for both client and server:
-```bash
+# Install all dependencies
 npm run install:all
-# or install separately:
-# npm run client:install
-# npm run server:install
-```
 
-3. Set up environment variables:
-```bash
-# Copy and configure server/.env
-cp server/.env.example server/.env
-```
-
-4. Start the development servers:
-```bash
-# Start both client and server concurrently
+# Start development servers (both client and server)
 npm run dev
-
-# Or start individually:
-# npm run server:dev  # Terminal 1
-# npm run client:dev  # Terminal 2
 ```
 
-## Available Scripts
+The application will be available at:
 
-### Root Level Scripts
-- `npm run install:all` - Install dependencies for both client and server
-- `npm run dev` - Start both development servers concurrently
-- `npm run build` - Build both client and server for production
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:3000
 
-### Client Scripts (React)
-- `npm run client:dev` - Start client development server
-- `npm run client:build` - Build client for production
-- `npm run client:start` - Preview production build
+### Individual Server Setup
 
-### Server Scripts (Express)
-- `npm run server:dev` - Start server with hot reload
-- `npm run server:build` - Build server for production
-- `npm run server:start` - Start production server
-
-## API Documentation
-
-The API endpoints are documented in `collection.http`. You can use VS Code REST Client extension or similar tools to test the API.
-
-### Key Endpoints
-- `GET /api/v1/products` - Get all products (paginated)
-- `POST /api/v1/products` - Create product (admin only)
-- `POST /api/v1/auth/login` - User authentication
-- `GET /api/v1/auth/me` - Get current user info
-
-## Database
-
-The application uses SQLite with Drizzle ORM for the database. Database files are gitignored.
-
-### Database Commands
 ```bash
-cd server
-npm run db:generate  # Generate migrations
-npm run db:push      # Push schema changes
-npm run db:migrate   # Run migrations
-npm run db:studio    # Open Drizzle Studio
+# Start only client
+npm run client:dev
+
+# Start only server
+npm run server:dev
 ```
 
-## Technologies Used
+### Environment Setup
 
-### Frontend (Client)
-- React 18 with TypeScript
-- Vite for build tooling
-- Material-UI (MUI) for components
-- React Query for state management
-- Styled Components for styling
-- React Router for routing
+The `.env` file is included for development and testing purposes for the sake of the Task. Otherwise this file should be ingnored by git.
 
-### Backend (Server)
-- Node.js with Express
-- TypeScript
-- SQLite with Drizzle ORM
-- Zod for validation
-- Pino for logging
-- JWT for authentication
-- bcrypt for password hashing
+**Admin Credentials**: Username: `admin`, Password: `admin123` (can be found in the login modal or server seed script)
 
-## Development Workflow
+## 3. How to Use
 
-1. **Make changes** in client/ or server/ directories
-2. **Test locally** with `npm run dev`
-3. **Commit changes** to git
-4. **Push to repository**
+### Public Features
 
-## Deployment
+- **Browse Products**: View paginated product catalog with search
+- **Product Details**: Click any product for detailed view
+- **Category Filtering**: Filter products by category
 
-### Client Deployment
+### Admin Features (Login Required)
+
+- **Product Management**: Create, edit, delete products
+- **Bulk Price Updates**: Update prices for multiple products
+- **Authentication**: Secure admin access with JWT tokens
+
+### Navigation
+
+- **Home**: Browse product catalog
+- **Admin Panel**: Manage products (admin only)
+- **Login**: Admin authentication
+
+## 4. API Calls
+
+### Authentication
+
+```http
+POST /api/v1/auth/login
+GET  /api/v1/auth/me
+POST /api/v1/auth/logout
+```
+
+### Products
+
+```http
+GET    /api/v1/products              # Get paginated products
+GET    /api/v1/products?search=term  # Search products
+POST   /api/v1/products              # Create product (admin)
+PUT    /api/v1/products/:id          # Update product (admin)
+DELETE /api/v1/products/:id          # Delete product (admin)
+POST   /api/v1/products/bulk-price-update # Bulk price update (admin)
+```
+
+### Categories
+
+```http
+GET /api/v1/categories # Get all categories
+```
+
+### Request/Response Examples
+
+#### Login
+
 ```bash
-npm run client:build
-# Deploy the client/dist/ folder to your hosting service
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}' \
+  --cookie-jar cookies.txt
 ```
 
-### Server Deployment
+#### Get Products
+
 ```bash
-npm run server:build
-# Deploy the server/dist/ folder to your server
+curl http://localhost:3000/api/v1/products?page=1&limit=10
 ```
 
-## Contributing
+#### Create Product
 
-1. Create a feature branch from `main`
-2. Make your changes
-3. Test thoroughly
-4. Create a pull request
+```bash
+curl -X POST http://localhost:3000/api/v1/products \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{
+    "name": "Wireless Headphones",
+    "price": 99.99,
+    "categoryId": "electronics",
+    "description": "High-quality wireless headphones"
+  }'
+```
 
-## License
+## 5. Postman Collection
 
-MIT License - see LICENSE file for details.
+Import the `ProductCatalog.postman_collection.json` file into Postman to test all API endpoints.
+
+### Collection Features
+
+- **Environment Variables**: `{{baseUrl}}` and `{{token}}` for easy configuration
+- **Authentication Flow**: Login and token management
+- **Complete CRUD Operations**: All product and category endpoints
+- **Search and Pagination**: Query parameter examples
+- **Admin Operations**: Protected endpoints for product management
+
+### Setup in Postman
+
+1. Import `ProductCatalog.postman_collection.json`
+2. Set environment variable `baseUrl` to `http://localhost:3000`
+3. Run authentication requests to get JWT token
+4. Use authenticated requests for admin operations
+
+## Additional Notes
+
+- **Database**: SQLite database is automatically created and seeded on first run
+- **Hot Reload**: Both client and server support hot reloading during development
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Security**: JWT authentication with bcrypt password hashing
+- **Validation**: Zod schemas for both client and server-side validation
+
+## Development Commands
+
+```bash
+# Install dependencies
+npm run install:all
+
+# Development
+npm run dev              # Both client and server
+npm run client:dev       # Client only
+npm run server:dev       # Server only
+
+# Building
+npm run build           # Build both
+npm run client:build    # Build client
+npm run server:build    # Build server
+
+# Database (server directory)
+npm run db:generate     # Generate migrations
+npm run db:push         # Push schema changes
+npm run db:studio       # Open Drizzle Studio
+```

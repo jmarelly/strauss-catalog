@@ -1,11 +1,22 @@
 import { useState, useEffect } from 'react';
-import { Box, TextField, InputAdornment, Typography } from '@mui/material';
+import {
+  Box,
+  TextField,
+  InputAdornment,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@mui/material';
 import { Search } from '@mui/icons-material';
 import type { ProductFiltersProps } from './types';
 
 export function ProductFilters({
   onFilterChange,
+  onLimitChange,
   totalItems,
+  currentLimit,
 }: ProductFiltersProps) {
   const [search, setSearch] = useState('');
 
@@ -42,6 +53,25 @@ export function ProductFilters({
           },
         }}
       />
+
+      <FormControl sx={{ minWidth: 80, maxWidth: 100 }}>
+        <InputLabel>Per Page</InputLabel>
+        <Select
+          value={currentLimit}
+          label="Per Page"
+          onChange={e => onLimitChange(Number(e.target.value))}
+          sx={{
+            backgroundColor: 'white',
+            height: 40,
+          }}
+        >
+          <MenuItem value={4}>4</MenuItem>
+          <MenuItem value={8}>8</MenuItem>
+          <MenuItem value={12}>12</MenuItem>
+          <MenuItem value={16}>16</MenuItem>
+          <MenuItem value={20}>20</MenuItem>
+        </Select>
+      </FormControl>
 
       <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
         {totalItems} products
